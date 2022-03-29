@@ -1,52 +1,37 @@
+import { stringify } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { Todo } from 'src/app/Todo';
 
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
-  styleUrls: ['./todos.component.css']
+  styleUrls: ['./todos.component.css'],
 })
 export class TodosComponent implements OnInit {
-  
-  todos:Todo[]
+  localItem: string | null ;
+  todos: Todo[];
 
-  constructor() { 
-   this.todos = [
-     {
-       sno: 1,
-       title: "This is title 1",
-       desc: "Description",
-       active:true
-     },
-     {
-       sno: 2,
-       title: "This is title 2",
-       desc: "Description",
-       active:true
-     },
-     {
-       sno: 3,
-       title: "This is title 3",
-       desc: "Description",
-       active:true
-     },
-     {
-       sno: 4,
-       title: "This is title 4",
-       desc: "Description",
-       active:true
-     },
-
-   ]
-  }
-  
-  
-  ngOnInit(): void {
+  constructor() {
+    this.localItem = localStorage.getItem("todos");
     
+    if (this.localItem ==null) {
+      this.todos = [];
+    }
+    else{
+      this.todos = JSON.parse(this.localItem);
+    }
   }
-  deleteTodo(todo: Todo){
+
+  ngOnInit(): void {}
+  deleteTodo(todo: Todo) {
     console.log(todo);
     const index = this.todos.indexOf(todo);
-    this.todos.splice(index,1)
+    this.todos.splice(index, 1);
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  }
+  AddTodo(todo: Todo) {
+    console.log(todo);
+    this.todos.push(todo);
+    localStorage.setItem('todos', JSON.stringify(this.todos));
   }
 }
